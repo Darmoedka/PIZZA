@@ -1,0 +1,195 @@
+
+DROP TABLE IF EXISTS pizza;
+
+CREATE TABLE pizza (
+       pizza_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	   pizza_name VARCHAR(30)
+);
+
+INSERT INTO pizza (pizza_name)  VALUES
+('Мексиканская'),
+('Пепперони'),
+('Курица с ананасами'),
+('4 сыра'),
+('Ветчина с сыром пармезан');
+
+DROP TABLE IF EXISTS doping;
+
+CREATE TABLE doping (
+       doping_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	   doping_name VARCHAR(40)
+);
+
+INSERT INTO doping (doping_name)  VALUES
+('Хлебцы'),
+('Соус чили'),
+('Четвертинки томатов'),
+('Ломтики пепперони'),
+('Маринованные огурчики'),
+('Соус барбекю'),
+('Соус терияки');
+
+DROP TABLE IF EXISTS customer;
+
+CREATE TABLE customer (
+       customer_id INTEGER PRIMARY KEY AUTOINCREMENT,
+	   customer_name VARCHAR(30),
+	   available_numbers INT
+);
+
+INSERT INTO customer (customer_name, available_numbers)  VALUES
+('Иванов М.С.', 2),
+('Петров Ф.С.', 3),
+('Федоров П.Р.', 0),
+('Абрамова А.А.', 1),
+('Самарин С.С.', 7),
+('Туполев И.Д.', 4),
+('Баранов П.В.', 6);
+
+DROP TABLE IF EXISTS order_buy;
+
+CREATE TABLE order_buy (
+      order_buy_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      pizza_id INT,
+      doping_id INT,
+      hour_delivery INT,
+      order_buy_date DATE,
+      FOREIGN KEY (pizza_id)  REFERENCES pizza (pizza_id) ON DELETE CASCADE,
+      FOREIGN KEY (doping_id)  REFERENCES doping (doping_id) ON DELETE CASCADE
+);
+
+INSERT INTO order_buy (pizza_id, doping_id, hour_delivery, order_buy_date)  VALUES
+(1, 3, 1, '2020-10-1'),
+(1, 1, 3, '2020-10-2'),
+(1, 5, 5, '2020-10-3'),
+(2, 4, 5, '2020-10-4'),
+(3, 5, 2, '2020-10-5'),
+(1, 4, 8, '2020-10-6'),
+(4, 6, 4, '2020-10-7'),
+(5, 5, 2, '2020-10-8'),
+(5, 3, 1, '2020-10-9'),
+(1, 5, 7, '2020-10-10'),
+(1, 5, 6, '2020-10-11'),
+(5, 3, 2, '2020-10-12'),
+(2, 5, 5, '2020-10-13'),
+(3, 1, 8, '2020-10-14'),
+(3, 4, 2, '2020-10-15'),
+(3, 5, 5, '2020-10-16'),
+(1, 4, 5, '2020-10-17'),
+(3, 4, 1, '2020-10-18'),
+(3, 3, 1, '2020-10-19'),
+(3, 5, 1, '2020-10-20'),
+(2, 2, 3, '2020-10-21'),
+(4, 1, 6, '2020-10-22'),
+(4, 6, 8, '2020-10-23'),
+(1, 6, 2, '2020-10-24'),
+(4, 3, 5, '2020-10-25'),
+(1, 2, 3, '2020-10-26'),
+(4, 3, 2, '2020-10-27'),
+(4, 4, 5, '2020-10-28'),
+(3, 5, 2, '2020-10-29');
+
+DROP TABLE IF EXISTS order_buy_customer;
+
+CREATE TABLE order_buy_customer (
+      order_buy_customer_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      order_buy_id int,
+      customer_id INT,
+	  getting_date DATE,
+      FOREIGN KEY (order_buy_id)  REFERENCES order_buy (order_buy_id) ON DELETE CASCADE,
+      FOREIGN KEY (customer_id)  REFERENCES customer (customer_id) ON DELETE CASCADE
+);
+
+INSERT INTO order_buy_customer(order_buy_id, customer_id,  getting_date)  VALUES
+( 4, 4,  '2020-09-24'),
+( 12, 6,  Null),
+( 29, 5,  '2020-10-10'),
+( 27, 6,  '2020-10-14'),
+( 15, 4,  '2020-10-04'),
+( 18, 1,  '2020-10-09'),
+( 22, 4,  '2020-10-10'),
+( 1, 3,  '2020-10-07'),
+( 26, 2,  '2020-10-08'),
+( 27, 1,  '2020-10-13'),
+( 18, 2,  NULL),
+( 26, 2,  '2020-10-26'),
+( 11, 1,  '2020-10-13'),
+( 3, 5,  '2020-10-27'),
+( 20, 6,  '2020-10-23'),
+( 20, 3,  '2020-10-29'),
+( 2, 2,  '2020-10-12'),
+( 27, 6,  '2020-10-17'),
+( 28, 4,  '2020-11-04'),
+( 5, 1,  '2020-10-18'),
+( 29, 1,  '2020-10-29'),
+( 3, 6,  Null),
+( 9, 6,  '2020-10-19'),
+( 15, 2,  '2020-11-08'),
+( 8, 6,  Null),
+( 18, 1,  NULL),
+( 23, 5,  Null),
+( 4, 5,  '2020-10-28'),
+( 26, 3,  '2020-10-28'),
+( 5, 6,  '2020-11-01'),
+( 8, 2,  '2020-11-18'),
+( 21, 5,  NUll),
+( 20, 1,  '2020-11-26'),
+( 14, 4,  '2020-11-10'),
+( 8, 6,  Null),
+( 11, 4,  '2020-11-26'),
+( 28, 6,  '2020-11-28'),
+( 14, 3,  Null),
+( 24, 2,  Null),
+( 5, 6,  Null),
+( 11, 3,  '2020-12-12'),
+( 14, 1,  Null),
+( 4, 5,  Null),
+( 23, 5, Null),
+( 21, 3,  '2020-12-21');
+
+DROP TABLE IF EXISTS order_buy_pizza;
+
+CREATE TABLE order_buy_pizza (
+      order_buy_pizza_id INTEGER PRIMARY KEY AUTOINCREMENT,
+      order_buy_id INT,
+      pizza_id INT,
+      FOREIGN KEY (order_buy_id)  REFERENCES order_buy (order_buy_id) ON DELETE CASCADE,
+      FOREIGN KEY (pizza_id)  REFERENCES pizza (pizza_id) ON DELETE CASCADE
+);
+
+INSERT INTO order_buy_pizza(order_buy_id, pizza_id)  VALUES
+(1, 4),
+(1, 5),
+(2, 4),
+(2, 5),
+(3, 6),
+(4, 3),
+(5, 2),
+(6, 1),
+(7, 7),
+(8, 8),
+(8, 9),
+(9, 8),
+(9, 9),
+(10, 1),
+(11, 6),
+(12, 8),
+(12, 9),
+(13, 3),
+(14, 2),
+(15, 2),
+(16, 2),
+(17, 1),
+(18, 10),
+(19, 10),
+(20, 10),
+(21, 10),
+(22, 1),
+(23, 1),
+(24, 7),
+(25, 7),
+(26, 4),
+(26, 5),
+(27, 7),
+(28, 7),
+(29, 2);

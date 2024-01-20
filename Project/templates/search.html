@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/css/style.css" />
+    <title> Поиск книги </title>
+    {% macro render_checkbox(relation, selected_list, name) %}
+        {% for i in range(relation|length) %}
+            {% set value = relation.loc[i, relation.dtypes.index[0]] %}
+            <div class="flex row">
+            <input 
+                type="checkbox" 
+                name="{{name}}" 
+                value="{{value}}" 
+                {% if value in selected_list %} checked="checked" {% endif %}
+            />{{value + " (" + relation.loc[i, relation.dtypes.index[1]]|string + ")"}}
+            </div>
+        {% endfor %}
+    {% endmacro %}
+
+    {% macro render_order_buy(df_order_buy) %}
+        {% for i in range(df_order_buy|length) %}
+            <div class="flex column width50">
+
+                <p>Название пиццы: {{df_order_buy.loc[i, "pizza_name"]}}</p>
+                <p>Добавка: {{df_order_buy.loc[i, "doping_name"]}}</p>
+                <p>Ориентировачное время доставки: {{df_order_buy.loc[i, "hour_delivery"]}}</p>
+                <p>Дата оформления заказа: {{df_order_buy.loc[i, "order_buy_date"]}}</p>
+                <p>order_buy_id: {{df_order_buy.loc[i, "order_buy_id"]}}</p>
+                <form action='{{url_for("index")}}' method ="get">
+                    <p>{{i}}</p>
+                    <input type="hidden" value="{{df_order_buy.loc[i, 'order_buy_id']}}" name="order_buy">
+                    <input type="submit" value="Выбрать"
+                           {% if not df_order_buy.loc[i, "order_buy_date"] %}
+                                disabled="disabled"
+                            {% endif %}
+                    >
+                </form> 
+            </div> 
+        {% endfor %}
+    {% endmacro %}
+</head>
+<body>
+    <div class=menu>
+        <ul>
+            <li class = active><a href={{ url_for("search")}}>Поиск книги</a></li>
+        </ul>
+    </div>
+    <div class=block>
+        <p>
+            <form action='' method ="post">
+                <div class="flex row">
+                    <div class="flex column width15">
+                        <div class="flex column">
+
+                            <details><summary>Пицца</summary>{{ render_checkbox(df_pizza, selected_pizza, "pizza")}}</details>
+                            <details><summary>Добавка</summary>{{ render_checkbox(df_doping, selected_doping, "doping")}}</details>
+                        </div>
+                        <input type="submit" value="Очистить" name="reset" />
+                        <input type="submit" value="Применить" name="confirm" />
+                    </div>
+                    <div class="flex column width85">
+                        <div class="flex column">
+                            <div class="block">
+                                {% if selected_pizza %}
+                                    Пицца: {{", ".join(selected_pizza)}} <br>
+                                {% endif %}
+                                {% if selected_doping %}
+                                    Добавка: {{", ".join(selected_publishers)}}
+                                {% endif %}
+                            </div>
+
+                            <div class="flex row wrap">
+                                {{ render_order_buy(df_order_buy) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form action='{{url_for("index")}}' method ="get">
+                <input type="submit" value="Не выбирать пиццу" />
+            </form> 
+        </p>
+    </div>
+</body>
+</html>
